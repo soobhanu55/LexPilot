@@ -1,0 +1,30 @@
+name: LexAgent CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env: 
+          POSTGRES_USER: lexagent
+          POSTGRES_PASSWORD: lexagent_secret
+          POSTGRES_DB: lexagent
+        ports: 
+          - "5432:5432"
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports: 
+          - "6333:6333"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: 
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: pytest evals/ -v --tb=short
+        env:
+          POSTGRES_HOST: localhost
+          QDRANT_HOST: localhost
+          OLLAMA_BASE_URL: http://localhost:11434

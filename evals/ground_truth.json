@@ -1,0 +1,58 @@
+[
+  {
+    "question": "Is an AI system used for CV screening in recruitment high-risk?",
+    "expected_tier": "high-risk",
+    "expected_articles": ["Article 6", "Annex III"],
+    "expected_answer_contains": ["employment", "Annex III", "high-risk"]
+  },
+  {
+    "question": "What does Article 9 require for high-risk AI?",
+    "expected_articles": ["Article 9"],
+    "expected_answer_contains": ["risk management", "continuous", "iterative"]
+  },
+  {
+    "question": "Our tool does real-time facial recognition in public spaces for tracking protestors without individual warrants. What describes this tool?",
+    "expected_tier": "prohibited",
+    "expected_articles": ["Article 5"],
+    "expected_answer_contains": ["prohibited", "biometric", "Article 5"]
+  },
+  {
+    "question": "Is a simple spam filter for an email application considered high risk?",
+    "expected_tier": "minimal-risk",
+    "expected_articles": [],
+    "expected_answer_contains": ["minimal-risk", "spam"]
+  },
+  {
+    "question": "We use AI to sort university admission essays. What is the risk level?",
+    "expected_tier": "high-risk",
+    "expected_articles": ["Article 6", "Annex III"],
+    "expected_answer_contains": ["education", "high-risk"]
+  },
+  {
+    "question": "We deployed a chatbot for customer service. Is this high-risk?",
+    "expected_tier": "limited-risk",
+    "expected_articles": ["Article 52"],
+    "expected_answer_contains": ["chatbot", "limited-risk", "transparency"]
+  },
+  {
+    "question": "When do the provisions for prohibited AI systems apply?",
+    "expected_articles": [],
+    "expected_answer_contains": ["2025-02-02", "ban"]
+  },
+  {
+    "question": "What is the requirement under Article 16?",
+    "expected_articles": ["Article 16"],
+    "expected_answer_contains": ["provider", "obligations"]
+  },
+  {
+    "question": "What penalties apply to violations of Article 5?",
+    "expected_articles": ["Article 99", "Article 5"],
+    "expected_answer_contains": ["penalties"]
+  },
+  {
+    "question": "Is an AI assessing credit score for mortgage high risk?",
+    "expected_tier": "high-risk",
+    "expected_articles": ["Article 6", "Annex III"],
+    "expected_answer_contains": ["essential private", "public services"]
+  }
+]

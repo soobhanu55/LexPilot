@@ -1,0 +1,21 @@
+# Vercel Ignore File
+# Exclude directories not needed for the live API bundle
+
+node_modules/
+frontend/
+.next/
+evals/
+ingestion/data/
+*.log
+Dockerfile
+docker-compose.yml
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+dev-requirements.txt
+README.md
+build_api.log
+models_out.txt
+test_embed.py
+check_models.py

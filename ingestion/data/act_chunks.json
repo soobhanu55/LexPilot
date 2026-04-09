@@ -1,0 +1,117 @@
+[
+  {
+    "article_id": "Article 5",
+    "title": "Placeholder for Article 5",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 5. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [
+      "Article 6",
+      "Annex III"
+    ],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Article 6",
+    "title": "Placeholder for Article 6",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 6. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Article 9",
+    "title": "Placeholder for Article 9",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 9. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Article 10",
+    "title": "Placeholder for Article 10",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 10. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Article 11",
+    "title": "Placeholder for Article 11",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 11. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Article 12",
+    "title": "Placeholder for Article 12",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Article 12. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": false
+  },
+  {
+    "article_id": "Annex III",
+    "title": "Placeholder for Annex III",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Annex III. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": true
+  },
+  {
+    "article_id": "Annex I",
+    "title": "Placeholder for Annex I",
+    "chapter": "Auto",
+    "title_section": "Auto",
+    "text": "This is an automated extraction fallback for Annex I. Contains prohibited, high risk, and classification rules.",
+    "cross_references": [],
+    "keywords": [
+      "high-risk",
+      "prohibited",
+      "biometric"
+    ],
+    "annex": true
+  }
+]

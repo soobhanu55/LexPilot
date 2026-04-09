@@ -45,10 +45,10 @@ def extract_keywords(text: str) -> list[str]:
 
 def scrape_articles(dry_run: bool = False):
     html = fetch_html()
-    if not html:
-        return
-    
-    soup = BeautifulSoup(html, "html.parser")
+    chunks = []
+
+    if html:
+        soup = BeautifulSoup(html, "html.parser")
     
     # Simple semantic splitting by looking at DOM structure
     # Note: Real EU lex markup is complex. We approximate parsing 'div' or paragraphs with class 'oj-normal'.
@@ -61,7 +61,7 @@ def scrape_articles(dry_run: bool = False):
     # but we'll try to find tags with id matching "art_X" or similar.
     
     # Simulated basic extraction logic:
-    paragraphs = soup.find_all("p")
+    paragraphs = soup.find_all("p") if html else []
     current_article = None
     current_title = ""
     current_text = []

@@ -1,0 +1,214 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "article_id": "Article 5",
+      "title": "Placeholder for Article 5",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [
+        "Article 6",
+        "Annex III"
+      ],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 5"
+    },
+    {
+      "article_id": "Article 6",
+      "title": "Placeholder for Article 6",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 6"
+    },
+    {
+      "article_id": "Article 9",
+      "title": "Placeholder for Article 9",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 9"
+    },
+    {
+      "article_id": "Article 10",
+      "title": "Placeholder for Article 10",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 10"
+    },
+    {
+      "article_id": "Article 11",
+      "title": "Placeholder for Article 11",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 11"
+    },
+    {
+      "article_id": "Article 12",
+      "title": "Placeholder for Article 12",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": false,
+      "id": "Article 12"
+    },
+    {
+      "article_id": "Annex III",
+      "title": "Placeholder for Annex III",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": true,
+      "id": "Annex III"
+    },
+    {
+      "article_id": "Annex I",
+      "title": "Placeholder for Annex I",
+      "chapter": "Auto",
+      "title_section": "Auto",
+      "cross_references": [],
+      "keywords": [
+        "high-risk",
+        "prohibited",
+        "biometric"
+      ],
+      "annex": true,
+      "id": "Annex I"
+    },
+    {
+      "id": "Article 17"
+    },
+    {
+      "id": "Article 13"
+    },
+    {
+      "id": "Article 14"
+    },
+    {
+      "id": "Article 15"
+    },
+    {
+      "id": "Article 99"
+    }
+  ],
+  "edges": [
+    {
+      "type": "semantic",
+      "source": "Article 5",
+      "target": "Article 6"
+    },
+    {
+      "type": "references",
+      "source": "Article 5",
+      "target": "Annex III"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 9"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 10"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 11"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 12"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 13"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 14"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 6",
+      "target": "Article 15"
+    },
+    {
+      "type": "semantic_requirement",
+      "source": "Article 9",
+      "target": "Article 17"
+    },
+    {
+      "type": "semantic_requirement",
+      "source": "Article 10",
+      "target": "Article 17"
+    },
+    {
+      "type": "semantic_requirement",
+      "source": "Article 11",
+      "target": "Article 17"
+    },
+    {
+      "type": "semantic_requirement",
+      "source": "Article 12",
+      "target": "Article 17"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 99",
+      "target": "Article 5"
+    },
+    {
+      "type": "semantic",
+      "source": "Article 99",
+      "target": "Article 6"
+    }
+  ]
+}

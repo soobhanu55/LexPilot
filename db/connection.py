@@ -25,7 +25,8 @@ def init_pool():
                 port=settings.postgres_port,
                 dbname=settings.postgres_db,
                 user=settings.postgres_user,
-                password=settings.postgres_password
+                password=settings.postgres_password,
+                sslmode="require"
             )
         except Exception as e:
             logger.error(f"Failed to connect to PostgreSQL: {e}")

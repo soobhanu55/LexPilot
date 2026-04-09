@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     google_api_key: str = ""
     llm_model: str = "gemini-1.5-flash"
-    embed_model: str = "text-embedding-004"
+    embed_model: str = "models/gemini-embedding-001"
 
     log_level: str = "INFO"
     environment: str = "development"

@@ -18,7 +18,7 @@ def run_embedder():
         q_client.create_collection(
             collection_name=collection_name,
             vectors_config=models.VectorParams(
-                size=768,  # nomic-embed-text size
+                size=3072,  # Google Gemini Embeddings size
                 distance=models.Distance.COSINE
             )
         )

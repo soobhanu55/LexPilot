@@ -1,0 +1,9 @@
+node_modules
+api/
+agents/
+config/
+db/
+ingestion/
+.next/
+out/
+build/

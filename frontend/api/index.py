@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -46,6 +46,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/api/debug-path")
+@app.get("/debug-path")
+def debug_path(request: Request):
+    return {
+        "path": request.url.path,
+        "root_path": request.scope.get("root_path"),
+        "headers": dict(request.headers)
+    }
 
 app.include_router(chat.router)
 app.include_router(inventory.router)

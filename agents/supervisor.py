@@ -80,6 +80,9 @@ graph = builder.compile(checkpointer=memory_saver)
 
 async def run_agent(user_message: str, company_id: str, session_id: str) -> AsyncGenerator[str, None]:
     
+    # IMMEDIATE yield to keep connection alive on Vercel
+    yield f"data: {json.dumps({'type': 'status', 'message': 'researching', 'session_id': session_id})}\n\n"
+    
     thread_config = {"configurable": {"thread_id": session_id}}
     
     # We pass minimal state; MemorySaver handles the rest

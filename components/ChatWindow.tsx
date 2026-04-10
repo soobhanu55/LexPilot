@@ -67,6 +67,8 @@ export default function ChatWindow() {
                 });
               } else if (data.type === 'citations') {
                 currentCitations = data.articles;
+              } else if (data.type === 'status') {
+                console.log("Agent status:", data.message);
               }
             } catch (e) {
               // Parse error on incomplete chunks

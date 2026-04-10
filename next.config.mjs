@@ -12,14 +12,6 @@ const nextConfig = {
         // your project has ESLint errors.
         ignoreDuringBuilds: true,
     },
-    rewrites: async () => {
-        return [
-            {
-                source: '/api/:path*',
-                destination: '/api/index.py',
-            },
-        ]
-    },
 };
 
 export default nextConfig;

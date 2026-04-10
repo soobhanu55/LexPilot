@@ -36,4 +36,11 @@ async def chat_endpoint(request: Request, body: ChatRequest, background_tasks: B
                 trace_data
             )
             
-    return EventSourceResponse(event_generator())
+    return EventSourceResponse(
+        event_generator(),
+        headers={
+            "X-Accel-Buffering": "no",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive"
+        }
+    )

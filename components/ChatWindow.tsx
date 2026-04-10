@@ -26,6 +26,7 @@ export default function ChatWindow() {
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      console.log("Current API Base URL:", baseUrl);
       const resp = await fetch(`${baseUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,14 +85,17 @@ export default function ChatWindow() {
 
   return (
     <div className="flex flex-col h-full relative">
-      <div className="px-6 py-2 border-b border-white/5 flex gap-4 items-center bg-black/20">
-        <span className="text-xs text-gray-500 font-medium">COMPANY ID</span>
-        <input 
-          type="text" 
-          value={companyId} 
-          onChange={e => setCompanyId(e.target.value)}
-          className="bg-transparent border border-white/10 rounded px-2 py-1 text-sm text-gray-300 focus:outline-none focus:border-blue-500 w-48 transition-colors"
-        />
+      <div className="px-6 py-2 border-b border-white/5 flex gap-4 items-center bg-black/20 justify-between">
+        <div className="flex gap-4 items-center">
+          <span className="text-xs text-gray-500 font-medium">COMPANY ID</span>
+          <input 
+            type="text" 
+            value={companyId} 
+            onChange={e => setCompanyId(e.target.value)}
+            className="bg-transparent border border-white/10 rounded px-2 py-1 text-sm text-gray-300 focus:outline-none focus:border-blue-500 w-48 transition-colors"
+          />
+        </div>
+        <span className="text-[10px] text-gray-600 font-mono">v1.0.2-diag</span>
       </div>
       
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">

@@ -61,9 +61,16 @@ def debug_path(request: Request):
         "headers": dict(request.headers)
     }
 
+# Diagnostic: Include routers both with and without /api prefix
+# This makes routing work regardless of whether Vercel strips the prefix
 app.include_router(chat.router)
+app.include_router(chat.router, prefix="/api")
+
 app.include_router(inventory.router)
+app.include_router(inventory.router, prefix="/api")
+
 app.include_router(audit.router)
+app.include_router(audit.router, prefix="/api")
 
 @app.get("/health")
 def health_check():

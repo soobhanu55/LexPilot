@@ -30,7 +30,7 @@ User Description: {state['user_message']}
 """
 
     try:
-        response = llm.invoke(prompt)
+        response = await llm.ainvoke(prompt)
         res_text = response.content.strip()
         # Clean up any potential markdown backticks
         if res_text.startswith("```json"):

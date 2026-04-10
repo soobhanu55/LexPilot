@@ -30,6 +30,12 @@ class Settings(BaseSettings):
             kwargs = {"url": self.qdrant_host, "api_key": self.qdrant_api_key}
         return QdrantClient(**kwargs)
 
+    def get_async_qdrant_client(self) -> AsyncQdrantClient:
+        kwargs = {"host": self.qdrant_host, "port": self.qdrant_port}
+        if self.qdrant_api_key:
+            kwargs = {"url": self.qdrant_host, "api_key": self.qdrant_api_key}
+        return AsyncQdrantClient(**kwargs)
+
     def get_llm(self, streaming: bool = False) -> ChatGoogleGenerativeAI:
         return ChatGoogleGenerativeAI(
             model=self.llm_model,

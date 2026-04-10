@@ -1,5 +1,6 @@
 import time
 import json
+import asyncio
 from qdrant_client.http import models
 
 from agents.state import LexAgentState
@@ -30,7 +31,7 @@ async def retrieve_articles(state: LexAgentState) -> LexAgentState:
     init_resources()
     
     embeddings = settings.get_embeddings()
-    q_client = settings.get_qdrant_client()
+    q_client = settings.get_async_qdrant_client()
     llm = settings.get_llm()
     
     query = state["user_message"]
@@ -39,8 +40,8 @@ async def retrieve_articles(state: LexAgentState) -> LexAgentState:
     
     # Step 1: Dense Retrieval
     try:
-        vector = embeddings.embed_query(query)
-        search_result = q_client.search(
+        vector = await embeddings.aembed_query(query)
+        search_result = await q_client.search(
             collection_name=settings.qdrant_collection,
             query_vector=vector,
             limit=5,
@@ -77,20 +78,19 @@ async def retrieve_articles(state: LexAgentState) -> LexAgentState:
                     "score": 0.5 # Default score for graph neighbors
                 })
     
-    # Step 4: Re-ranking
-    reranked = []
-    for c in candidates:
+    # Step 4: Parallel Re-ranking
+    async def rank_candidate(c):
         prompt = f"""Rate relevance of this text to the query from 0-10 (ONLY OUTPUT THE NUMBER, nothing else): 
 query={query} 
 text={c['text'][:300]}"""
         try:
-            res = llm.invoke(prompt)
-            score = float(res.content.strip())
+            res = await llm.ainvoke(prompt)
+            c["rerank_score"] = float(res.content.strip())
         except:
-            score = c["score"] * 10
-            
-        c["rerank_score"] = score
-        reranked.append(c)
+            c["rerank_score"] = c["score"] * 10
+        return c
+
+    reranked = await asyncio.gather(*[rank_candidate(c) for c in candidates])
         
     reranked.sort(key=lambda x: x["rerank_score"], reverse=True)
     top_6 = reranked[:6]

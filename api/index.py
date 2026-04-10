@@ -12,22 +12,8 @@ logger = logging.getLogger("api")
 async def lifespan(app: FastAPI):
     # Verify Connections
     logger.info("Starting up LexAgent API...")
-    try:
-        q_client = settings.get_qdrant_client()
-        q_client.get_collections()
-        logger.info("Qdrant OK.")
-    except Exception as e:
-        logger.warning(f"Qdrant exception on startup: {e}")
-        
-    try:
-        from db.connection import get_conn
-        with get_conn() as conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT 1")
-        logger.info("PostgreSQL OK.")
-    except Exception as e:
-        logger.warning(f"PostgreSQL exception on startup: {e}")
-        
+    # Skipping heavy connection checks on startup to avoid Vercel timeouts
+    # These will be verified on-demand during agent execution.
     yield
     logger.info("Shutting down LexAgent API...")
 

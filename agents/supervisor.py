@@ -28,7 +28,7 @@ Determine the user's intent:
 User: {state['user_message']}"""
 
     try:
-        resp = llm.invoke(prompt)
+        resp = await llm.ainvoke(prompt)
         res_text = resp.content.strip()
         if res_text.startswith("```json"): res_text = res_text[7:-3]
         elif res_text.startswith("```"): res_text = res_text[3:-3]

@@ -25,7 +25,7 @@ export default function ChatWindow() {
     setIsLoading(true);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '/backend-api';
       console.log("Current API Base URL:", baseUrl);
       const resp = await fetch(`${baseUrl}/chat`, {
         method: 'POST',

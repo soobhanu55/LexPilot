@@ -7,7 +7,7 @@ export default function AuditLog() {
   const companyId = 'demo-company';
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/audit/${companyId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/backend-api'}/audit/${companyId}`)
       .then(r => r.json())
       .then(data => setLogs(data || []))
       .catch(console.error);

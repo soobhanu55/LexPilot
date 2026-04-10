@@ -13,7 +13,7 @@ if root_dir not in sys.path:
     sys.path.append(root_dir)
 
 from config.settings import settings
-from api.routes import chat, inventory, audit
+from backend_api.routes import chat, inventory, audit
 
 logger = logging.getLogger("api")
 
@@ -45,8 +45,8 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 @app.get("/")
-@app.get("/api")
-@app.get("/api/health-check")
+@app.get("/backend-api")
+@app.get("/backend-api/health-check")
 def simple_health_check():
     return {"status": "ok", "message": "LexAgent API is alive"}
 
@@ -58,7 +58,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/debug-path")
+@app.get("/backend-api/debug-path")
 @app.get("/debug-path")
 def debug_path(request: Request):
     return {
@@ -70,13 +70,13 @@ def debug_path(request: Request):
 # Diagnostic: Include routers both with and without /api prefix
 # This makes routing work regardless of whether Vercel strips the prefix
 app.include_router(chat.router)
-app.include_router(chat.router, prefix="/api")
+app.include_router(chat.router, prefix="/backend-api")
 
 app.include_router(inventory.router)
-app.include_router(inventory.router, prefix="/api")
+app.include_router(inventory.router, prefix="/backend-api")
 
 app.include_router(audit.router)
-app.include_router(audit.router, prefix="/api")
+app.include_router(audit.router, prefix="/backend-api")
 
 @app.get("/health")
 def health_check():

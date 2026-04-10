@@ -1,24 +1,24 @@
 {
   "version": 2,
   "functions": {
-    "api/index.py": {
+    "backend_api/index.py": {
       "maxDuration": 60,
       "memory": 1024
     }
   },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "source": "/backend-api/(.*)",
+      "destination": "/backend_api/index.py"
     },
     {
-      "source": "/api",
-      "destination": "/api/index.py"
+      "source": "/backend-api",
+      "destination": "/backend_api/index.py"
     }
   ],
   "headers": [
     {
-      "source": "/api/chat",
+      "source": "/backend-api/chat",
       "headers": [
         {
           "key": "X-Accel-Buffering",

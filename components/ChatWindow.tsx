@@ -25,11 +25,17 @@ export default function ChatWindow() {
     setIsLoading(true);
 
     try {
-      const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/chat`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const resp = await fetch(`${baseUrl}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, company_id: companyId, session_id: 'session-' + Date.now() })
       });
+
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        throw new Error(`API Error (${resp.status}): ${errorText}`);
+      }
 
       if (!resp.body) throw new Error("No body");
       const reader = resp.body.getReader();

@@ -8,7 +8,7 @@ export default function InventoryTable() {
   const companyId = 'demo-company';
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/inventory/${companyId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/inventory/${companyId}`)
       .then(r => r.json())
       .then(data => setSystems(data || []))
       .catch(console.error);

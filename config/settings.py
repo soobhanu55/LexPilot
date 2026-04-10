@@ -20,7 +20,8 @@ class Settings(BaseSettings):
     embed_model: str = "models/gemini-embedding-001"
 
     log_level: str = "INFO"
-    environment: str = "development"
+    environment: str = "production"
+    debug: bool = True # Enabling temporarily for deployment debugging
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

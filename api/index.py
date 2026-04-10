@@ -1,7 +1,16 @@
+import sys
+import os
+import logging
+import traceback
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import logging
+
+# Ensure the root directory is in the python path for Vercel
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if root_dir not in sys.path:
+    sys.path.append(root_dir)
 
 from config.settings import settings
 from api.routes import chat, inventory, audit
@@ -10,19 +19,30 @@ logger = logging.getLogger("api")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Verify Connections
-    logger.info("Starting up LexAgent API...")
-    # Skipping heavy connection checks on startup to avoid Vercel timeouts
-    # These will be verified on-demand during agent execution.
+    logger.info("Starting up LexAgent API (v1.0.2-diag)...")
     yield
     logger.info("Shutting down LexAgent API...")
 
-
 app = FastAPI(
     title="LexAgent API", 
-    version="1.0.0",
+    version="1.0.2-diag",
     lifespan=lifespan
 )
+
+# Global Error Handler to catch 500s and return JSON instead of Next.js HTML
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    error_details = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    logger.error(f"Unhandled Exception: {error_details}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal Server Error",
+            "message": str(exc),
+            "type": type(exc).__name__,
+            "trace": error_details if settings.debug else "Detailed trace disabled in production"
+        }
+    )
 
 @app.get("/")
 @app.get("/api")

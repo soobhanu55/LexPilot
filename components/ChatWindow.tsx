@@ -75,7 +75,8 @@ export default function ChatWindow() {
       }
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'agent', content: 'Sorry, I encountered an error connecting to the API.' }]);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
+      setMessages(prev => [...prev, { role: 'agent', content: `Sorry, I encountered an error: ${errorMessage}. Please check your API configuration and Vercel environment variables.` }]);
     } finally {
       setIsLoading(false);
     }

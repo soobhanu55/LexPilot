@@ -35,9 +35,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="LexAgent API", 
     version="1.0.0",
-    lifespan=lifespan,
-    root_path="/api"
+    lifespan=lifespan
 )
+
+@app.get("/")
+@app.get("/api")
+@app.get("/api/health-check")
+def simple_health_check():
+    return {"status": "ok", "message": "LexAgent API is alive"}
 
 app.add_middleware(
     CORSMiddleware,

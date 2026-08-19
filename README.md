@@ -56,11 +56,13 @@ This scrapes EUR-Lex, builds the NetworkX knowledge graph, and upserts text chun
 
 ## Running Evals
 
-To evaluate retrieval speed and agent classification accuracy against the ground truth:
+A real, hand-labeled 10-question ground-truth set already exists (`evals/ground_truth.json`: 6 questions with an expected EU AI Act risk tier, 8 with expected source articles), evaluable via:
 
 ```bash
 pytest evals/ -v
 ```
+
+**Not run yet, disclosed honestly rather than left unclear:** both the classifier (`agents/classifier.py`) and the retriever's reranking step (`agents/retriever.py`) call Google Gemini directly with no local/offline fallback — there's no rule-based or local-model path in this codebase to substitute. Running this eval for real requires a Google Gemini API key (Gemini has a genuinely free tier with no credit card required, similar to Groq) which wasn't available when this repo was last reviewed. No accuracy number is reported here because none has actually been measured — that's the honest state, not a guess dressed up as a result.
 
 ## API Endpoint Reference
 

@@ -1,0 +1,13 @@
+# Extra dependencies for local QLoRA fine-tuning and inference.
+# Not required for the default Gemini-only setup — only install these
+# if you plan to train or run the local classifier (USE_LOCAL_CLASSIFIER=true).
+#
+# GPU build: install torch first, matching your CUDA version, e.g.:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+torch>=2.6.0
+transformers>=5.17.0
+accelerate>=1.0.0
+peft>=0.21.0
+bitsandbytes>=0.50.0
+datasets>=5.0.0
+trl>=1.13.0

@@ -1,0 +1,11 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "method": "QLoRA (4-bit NF4, r=16, alpha=32)",
+  "train_examples": 145,
+  "val_examples": 20,
+  "epochs": 3,
+  "final_train_loss": 0.0582,
+  "final_eval_loss": 0.0440,
+  "final_eval_token_accuracy": 0.9896,
+  "trained_on": "programmatically generated scenarios across 4 EU AI Act risk tiers, disjoint from evals/ground_truth.json"
+}

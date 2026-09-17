@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     environment: str = "production"
     debug: bool = True # Enabling temporarily for deployment debugging
 
+    # If true, the classifier node uses the local QLoRA fine-tuned model
+    # (agents/local_classifier.py) instead of calling Gemini. See
+    # finetune/README.md for how it was trained and evaluated.
+    use_local_classifier: bool = False
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     def get_qdrant_client(self) -> QdrantClient:

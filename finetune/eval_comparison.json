@@ -1,0 +1,150 @@
+{
+  "base": {
+    "label": "BASE (Qwen2.5-1.5B-Instruct, zero-shot)",
+    "tier_correct": 2,
+    "tier_total": 6,
+    "article_correct": 0,
+    "article_total": 5,
+    "results": [
+      {
+        "question": "Is an AI system used for CV screening in recruitment high-risk?",
+        "predicted": "high-risk",
+        "raw": "```json\n{\n  \"tier\": \"high-risk\",\n  \"matched_article\": \"Article X\",\n  \"matched_annex_entry\": \"Education and vocational training\",\n  \"reasoning\": \"The use of an AI system for CV screening in recruitment involves collecting personal data such as education and work experience, which can be considered sensitive information. This practice falls under the high-risk category as it pertains to critical infrastructure management.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "high-risk",
+        "tier_correct": true,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Our tool does real-time facial recognition in public spaces for tracking protestors without individual warrants. What describes this tool?",
+        "predicted": "prohibited",
+        "raw": "```json\n{\n  \"tier\": \"prohibited\",\n  \"matched_article\": \"Article X\",\n  \"matched_annex_entry\": \"biometric identification and categorisation\",\n  \"reasoning\": \"The use of real-time facial recognition in public spaces for tracking protestors is considered high-risk as it involves critical infrastructure management and education and vocational training.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "prohibited",
+        "tier_correct": true,
+        "expected_articles": [
+          "Article 5"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Is a simple spam filter for an email application considered high risk?",
+        "predicted": "minimallimitedrisk",
+        "raw": "```json\n{\n  \"tier\": \"minimallimitedrisk\",\n  \"matched_article\": \"null\",\n  \"matched_annex_entry\": \"null\",\n  \"reasoning\": \"The use of a spam filter is generally considered minimal risk as it does not involve social scoring, real-time biometric identification, or any other prohibited activities.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "minimal-risk",
+        "tier_correct": false
+      },
+      {
+        "question": "We use AI to sort university admission essays. What is the risk level?",
+        "predicted": "limited-risk",
+        "raw": "```json\n{\n  \"tier\": \"limited-risk\",\n  \"matched_article\": \"null\",\n  \"matched_annex_entry\": \"null\",\n  \"reasoning\": \"The use of AI for sorting university admission essays does not involve social scoring, real-time biometric identification, cognitive behavioral manipulation, untargeted facial recognition, emotion inference, biometric categorization based on sensitive traits, predictive policing, or critical infrastructure management.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "high-risk",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "We deployed a chatbot for customer service. Is this high-risk?",
+        "predicted": "minimal-risk",
+        "raw": "```json\n{\n  \"tier\": \"minimal-risk\",\n  \"matched_article\": \"null\",\n  \"matched_annex_entry\": \"Chatbot\",\n  \"reasoning\": \"The deployment of a chatbot for customer service does not involve any of the prohibited or high-risk categories as defined by the EU AI Act.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "limited-risk",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 52"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Is an AI assessing credit score for mortgage high risk?",
+        "predicted": "prohibited",
+        "raw": "```json\n{\n  \"tier\": \"prohibited\",\n  \"matched_article\": \"Article X\",\n  \"matched_annex_entry\": \"null\",\n  \"reasoning\": \"The assessment involves social scoring, which is prohibited by Article 5 of the EU AI Act.\",\n  \"confidence\": \"high\"\n}\n```",
+        "expected_tier": "high-risk",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      }
+    ]
+  },
+  "fine_tuned": {
+    "label": "FINE-TUNED (Qwen2.5-1.5B-Instruct + QLoRA)",
+    "tier_correct": 3,
+    "tier_total": 6,
+    "article_correct": 0,
+    "article_total": 5,
+    "results": [
+      {
+        "question": "Is an AI system used for CV screening in recruitment high-risk?",
+        "predicted": "high-risk",
+        "raw": "{\"tier\": \"high-risk\", \"matched_article\": \"Article III\", \"matched_annex_entry\": null, \"reasoning\": \"AI used for candidate screening in recruitment is high-risk under Article III.\", \"confidence\": \"high\"}",
+        "expected_tier": "high-risk",
+        "tier_correct": true,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Our tool does real-time facial recognition in public spaces for tracking protestors without individual warrants. What describes this tool?",
+        "predicted": "high-risk",
+        "raw": "{\"tier\": \"high-risk\", \"matched_annex_entry\": \"Education and vocational training\", \"reasoning\": \"Real-time remote biometric identification outside strict necessity cases is high-risk under Annex III.\", \"confidence\": \"high\"}",
+        "expected_tier": "prohibited",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 5"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Is a simple spam filter for an email application considered high risk?",
+        "predicted": "minimal-risk",
+        "raw": "{\"tier\": \"minimal-risk\", \"matched_annex_entry\": null, \"reasoning\": \"Simple spam filtering is a minimal-risk use case.\", \"confidence\": \"high\"}",
+        "expected_tier": "minimal-risk",
+        "tier_correct": true
+      },
+      {
+        "question": "We use AI to sort university admission essays. What is the risk level?",
+        "predicted": "minimal-risk",
+        "raw": "{\"tier\": \"minimal-risk\", \"matched_article\": \"null\", \"matched_annex_entry\": null, \"reasoning\": \"AI sorting of academic submissions is minimal-risk.\", \"confidence\": \"high\"}",
+        "expected_tier": "high-risk",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "We deployed a chatbot for customer service. Is this high-risk?",
+        "predicted": "minimal-risk",
+        "raw": "{\"tier\": \"minimal-risk\", \"matched_article\": \"null\", \"matched_annex_entry\": null, \"reasoning\": \"Chatbots used for customer service interactions are minimal-risk.\", \"confidence\": \"high\"}",
+        "expected_tier": "limited-risk",
+        "tier_correct": false,
+        "expected_articles": [
+          "Article 52"
+        ],
+        "article_correct": false
+      },
+      {
+        "question": "Is an AI assessing credit score for mortgage high risk?",
+        "predicted": "high-risk",
+        "raw": "```json\n{\"tier\": \"high-risk\", \"matched_article\": \"Article III\", \"matched_annex_entry\": null, \"reasoning\": \"AI assessing credit scores for high-risk lending is classified as high-risk.\", \"confidence\": \"high\"}\n```",
+        "expected_tier": "high-risk",
+        "tier_correct": true,
+        "expected_articles": [
+          "Article 6",
+          "Annex III"
+        ],
+        "article_correct": false
+      }
+    ]
+  }
+}

@@ -60,7 +60,15 @@ async def synthesize_answer(state: LexAgentState) -> LexAgentState:
 builder = StateGraph(LexAgentState)
 
 builder.add_node("detect_intent", detect_intent)
-builder.add_node("classifier_node", classify_ai_system)
+if settings.use_local_classifier:
+    # Lazy import: only pulls in torch/peft/bitsandbytes (finetune/requirements.txt)
+    # when actually enabled, so the default Gemini-only setup stays lightweight.
+    from agents.local_classifier import classify_ai_system_local
+    _classifier_node = classify_ai_system_local
+else:
+    _classifier_node = classify_ai_system
+
+builder.add_node("classifier_node", _classifier_node)
 builder.add_node("retriever_node", retrieve_articles)
 builder.add_node("checklist_node", generate_checklist)
 builder.add_node("memory_node", manage_inventory)

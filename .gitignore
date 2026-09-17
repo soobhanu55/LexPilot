@@ -4,7 +4,12 @@ __pycache__/
 *$py.class
 venv/
 env/
+.venv_ft/
 .pytest_cache/
+
+# Fine-tuning: keep the final adapter (evidence of the real trained result),
+# drop the mid-training checkpoint (duplicate weights + optimizer state, ~110MB)
+finetune/lexpilot-classifier-lora/checkpoint-*/
 
 # Node
 node_modules/

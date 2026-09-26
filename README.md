@@ -12,6 +12,8 @@ Supervisor Agent → Classifier | Retriever (GraphRAG + Qdrant) | Checklist | Me
 
 Retrieval runs over a NetworkX knowledge graph plus Qdrant, so answers pull linked, connected context — not isolated text chunks. A supervisor agent routes each request to the right worker.
 
+**Cost cap and retries.** One user request can trigger several Gemini calls (intent, the worker agent, the final answer). Every call goes through `settings.get_llm()`, which adds up real token usage per request and refuses the next call once the request has spent `MAX_USD_PER_REQUEST` (default $0.01); the user gets a clear "cost cap reached" message instead of a silent bill. Transient API errors are retried twice, and retries count against the same budget. Logic and self-check in [`config/cost_guard.py`](config/cost_guard.py) (`python -m config.cost_guard`).
+
 ## Results
 
 - **Classifier (fine-tuned local option):** on a held-out 6-question eval, a QLoRA fine-tuned local model scored **3/6 (50%)** vs. **2/6 (33%)** for the same base model unfine-tuned — a real, modest improvement, not a large one, honestly reported. Details and full methodology in [`finetune/README.md`](finetune/README.md).

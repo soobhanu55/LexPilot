@@ -11,6 +11,7 @@ from agents.checklist import generate_checklist
 from agents.memory_agent import manage_inventory
 from agents.deadlines import track_deadlines
 from config.settings import settings
+from config.cost_guard import start_request, budget_exhausted, spent_usd, MAX_USD_PER_REQUEST
 
 # 1. Intent Detection
 async def detect_intent(state: LexAgentState) -> LexAgentState:
@@ -90,7 +91,8 @@ async def run_agent(user_message: str, company_id: str, session_id: str) -> Asyn
     
     # IMMEDIATE yield to keep connection alive on Vercel
     yield f"data: {json.dumps({'type': 'status', 'message': 'researching', 'session_id': session_id})}\n\n"
-    
+    start_request()  # fresh cost budget for this request (see config/cost_guard.py)
+
     thread_config = {"configurable": {"thread_id": session_id}}
     
     # We pass minimal state; MemorySaver handles the rest
@@ -139,6 +141,12 @@ async def run_agent(user_message: str, company_id: str, session_id: str) -> Asyn
         
     prompt = f"{sys_prompt}\n\nContext:\n{context_str}\n\nUser Q: {user_message}\n\nProvide the final response. Cite securely using [Article X] inline."
     
+    if budget_exhausted():
+        msg = f"Stopped: this request hit its cost cap (${spent_usd():.4f} of ${MAX_USD_PER_REQUEST:.4f}). Try a narrower question."
+        yield f"data: {json.dumps({'type': 'answer', 'text': msg})}\n\n"
+        yield f"data: {json.dumps({'type': 'done', 'session_id': session_id, 'trace': final_state.get('agent_trace', [])})}\n\n"
+        return
+
     llm = settings.get_llm(streaming=True)
     
     yield f"data: {json.dumps({'type': 'citations', 'articles': list(citations)})}\n\n"

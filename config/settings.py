@@ -1,6 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from qdrant_client import QdrantClient
+from qdrant_client import AsyncQdrantClient, QdrantClient
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+
+from config.cost_guard import CostCap
 
 
 class Settings(BaseSettings):
@@ -46,7 +48,9 @@ class Settings(BaseSettings):
         return ChatGoogleGenerativeAI(
             model=self.llm_model,
             temperature=0.0,
-            api_key=self.google_api_key
+            api_key=self.google_api_key,
+            max_retries=2,  # transient API errors are retried; each retry still counts against the cost cap
+            callbacks=[CostCap()],
         )
 
     def get_embeddings(self) -> GoogleGenerativeAIEmbeddings:

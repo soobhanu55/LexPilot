@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from api.models import InventoryItem
+from backend_api.models import InventoryItem
 from db.queries import get_inventory, upsert_ai_system, update_compliance_status
 
 router = APIRouter(prefix="/inventory", tags=["Inventory"])

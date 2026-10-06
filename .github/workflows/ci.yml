@@ -13,9 +13,9 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -r requirements.txt pytest pytest-asyncio
+      - run: pip install -r requirements.txt pytest pytest-asyncio pytest-cov httpx
       # evals/ (retrieval + classifier benchmarks) need live Qdrant, Postgres and an LLM: run locally
-      - run: pytest -q
+      - run: pytest -q --cov=agents --cov=backend_api --cov=config --cov=ingestion --cov-fail-under=60
   docker:
     runs-on: ubuntu-latest
     steps:

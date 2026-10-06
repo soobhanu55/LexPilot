@@ -3,9 +3,9 @@ import asyncio
 from fastapi import APIRouter, Request, BackgroundTasks
 from sse_starlette.sse import EventSourceResponse
 
-from api.models import ChatRequest
+from backend_api.models import ChatRequest
 from agents.supervisor import run_agent
-from api.audit_log import save_trace_to_db
+from backend_api.audit_log import save_trace_to_db
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -25,7 +25,9 @@ async def chat_endpoint(request: Request, body: ChatRequest, background_tasks: B
                 except:
                     pass
                     
-            yield chunk
+            # run_agent yields complete SSE frames; EventSourceResponse adds the framing itself, so passing
+            # them through unchanged produced a doubled 'data: data: {...}' and the frontend's JSON.parse failed.
+            yield chunk.removeprefix("data: ").strip()
             
         if trace_data:
             background_tasks.add_task(

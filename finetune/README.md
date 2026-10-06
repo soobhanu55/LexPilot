@@ -23,22 +23,33 @@ python finetune/train_qlora.py
 
 3 epochs, ~107 seconds on the RTX 4050. Saves a LoRA adapter to `finetune/lexpilot-classifier-lora/`.
 
-## Evaluation — the honest result
+## Evaluation
 
-`evaluate.py` compares the **same base model, with and without the fine-tuned adapter**, on the 6 classification questions in `evals/ground_truth.json` (the other 4 ground-truth entries are retriever-only questions, out of scope for a classifier and correctly excluded, matching `evals/test_classification.py`'s own methodology).
+### 60-item held-out set (`eval_set.jsonl`, `evaluate_set.py`, `eval_large.json`)
 
-```bash
-python finetune/evaluate.py
-```
+15 hand-written descriptions per tier (8 in German), labelled against the Act's text (Art. 5 prohibited practices, Annex III areas, Art. 50
+transparency duties) and disjoint from the training data (a test checks this). Written by the assistant that built the repo, not by a lawyer, and
+emotion recognition outside work and school was left out because the Act and LexPilot's rubric disagree on it. Same base model, same prompt, only the
+adapter differs; the shipped adapter plus two extra training seeds (`python finetune/train_qlora.py --seed N --out DIR`) to show run-to-run spread.
 
-**Measured result** (`finetune/eval_comparison.json`):
+| Model | Correct | Accuracy (95% Wilson interval) | prohibited | high-risk | limited-risk | minimal-risk | McNemar p vs base |
+|---|---|---|---|---|---|---|---|
+| Base, zero-shot | 27/60 | 45.0% (33.1 to 57.5) | 100% | 0% | 20% | 60% | n/a |
+| Fine-tuned (shipped adapter) | 30/60 | 50.0% (37.7 to 62.3) | 13% | 93% | 0% | 93% | 0.74 |
+| Fine-tuned (seed 1) | 29/60 | 48.3% (36.2 to 60.7) | 13% | 87% | 0% | 93% | 0.86 |
+| Fine-tuned (seed 2) | 29/60 | 48.3% (36.2 to 60.7) | 13% | 87% | 0% | 93% | 0.86 |
 
-| Model | Tier accuracy | Article-field accuracy |
-|---|---|---|
-| Base (zero-shot) | 2/6 (33%) | 0/5 |
-| **Fine-tuned (QLoRA)** | **3/6 (50%)** | 0/5 |
+Chance is 25%. **Fine-tuning did not improve overall accuracy beyond noise**, and the three seeds agree with each other, so this is not a bad seed.
+It changed which errors the model makes: it learned that most inputs are high-risk or minimal-risk, loses the base model's perfect prohibited recall
+(13 of 15 prohibited cases become high-risk) and never outputs limited-risk (chatbots and generators become minimal-risk). The training set (145
+templated examples built from one prompt pattern) is probably too narrow in phrasing for the new descriptions; more varied training data, more
+limited-risk and prohibited examples, and a larger model are the obvious next experiments. Until then the Gemini classifier stays the default and
+this local one is an experiment, not a replacement.
 
-A real, modest improvement — not a large one, and on a genuinely small sample (6 questions). One case that the base model got right, the fine-tuned model got wrong (the real-time-facial-recognition prohibited case), while two others flipped from wrong to right. Article-field accuracy (matching the specific Article/Annex citation) did not improve at all for either model — the fine-tuning helped tier classification, not citation precision. Reported here as it measured, not rounded up or cherry-picked.
+### The original 6 questions (`evaluate.py`, `eval_comparison.json`)
+
+On the 6 classification questions in `evals/ground_truth.json` the base model scored 2/6 and the fine-tuned one 3/6; with six items that difference is
+meaningless, which is why the 60-item set above was added. Article-citation accuracy was 0/5 for both.
 
 ## Using it
 

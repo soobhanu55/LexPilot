@@ -16,7 +16,7 @@ Retrieval runs over a NetworkX knowledge graph plus Qdrant, so answers pull link
 
 ## Results
 
-- **Classifier (fine-tuned local option):** on a held-out 6-question eval, a QLoRA fine-tuned local model scored **3/6 (50%)** vs. **2/6 (33%)** for the same base model unfine-tuned — a real, modest improvement, not a large one, honestly reported. Details and full methodology in [`finetune/README.md`](finetune/README.md).
+- **Classifier (fine-tuned local option), 60-item held-out set:** the QLoRA model does **not** beat its base model overall: base 27/60 (45%), fine-tuned 30/60 (50%), and two more training seeds 29/60 each (95% intervals about 33-62%, McNemar p = 0.74 to 0.86 against the base). What changed is the failure mode: the base model gets every prohibited case right and no high-risk case; the fine-tuned model gets high-risk and minimal-risk right (93%) but calls most prohibited cases high-risk and never predicts limited-risk. The earlier "3/6 vs 2/6" came from 6 questions, which cannot separate models. Gemini (the default) is unchanged and unmeasured here. Details in [`finetune/README.md`](finetune/README.md).
 - **Retriever accuracy:** not yet measured — running it needs a Gemini API key that wasn't available when this was last reviewed. Stated here rather than left unclear.
 
 **Corrected note:** earlier versions of this README described a fully local, Ollama-based architecture that was never actually implemented — the code only ever called Gemini. That's now fixed for real: the classifier has a genuinely trained and evaluated local alternative (above), not just aspirational documentation.
@@ -41,3 +41,7 @@ python finetune/build_training_data.py && python finetune/train_qlora.py
 ```
 
 Full architecture, API reference, and enforcement timeline in [`docs/DETAILS.md`](docs/DETAILS.md).
+
+## Tests
+
+55 offline tests (scripted LLM, stubbed Qdrant and Postgres, no keys): every agent node, the LangGraph supervisor's streamed events including session memory and the cost cap, the retriever's graph expansion and rerank fallbacks, the FastAPI routes, the data hygiene of the training and evaluation sets, and the ingestion graph. CI fails below 60% line coverage. Writing them found two real defects, both fixed: the API package could not be imported at all (a renamed folder left every import and the Docker commands pointing at `api`), and the chat endpoint double-wrapped its server-sent events (`data: data: {...}`), which the frontend could not parse.

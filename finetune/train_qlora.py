@@ -5,6 +5,7 @@ disjoint from evals/ground_truth.json).
 
 Runs on a single consumer GPU (developed/tested on a 6GB RTX 4050 laptop GPU).
 """
+import argparse
 import json
 import torch
 from pathlib import Path
@@ -39,6 +40,12 @@ def format_example(ex):
     return {"messages": messages}
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=int, default=42, help="training seed (the shipped adapter used the default)")
+    ap.add_argument("--out", default=str(OUT_DIR), help="where to save the adapter")
+    args = ap.parse_args()
+    out_dir = Path(args.out)
+
     print(f"Loading base model: {BASE_MODEL}")
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -77,7 +84,8 @@ def main():
     ds = ds.map(format_example)
 
     sft_config = SFTConfig(
-        output_dir=str(OUT_DIR),
+        output_dir=str(out_dir),
+        seed=args.seed,
         num_train_epochs=3,
         per_device_train_batch_size=2,
         gradient_accumulation_steps=4,
@@ -103,17 +111,18 @@ def main():
     print("Starting training...")
     trainer.train()
 
-    print(f"Saving LoRA adapter to {OUT_DIR}")
-    trainer.save_model(str(OUT_DIR))
-    tokenizer.save_pretrained(str(OUT_DIR))
+    print(f"Saving LoRA adapter to {out_dir}")
+    trainer.save_model(str(out_dir))
+    tokenizer.save_pretrained(str(out_dir))
 
-    with open(OUT_DIR / "training_meta.json", "w") as f:
+    with open(out_dir / "training_meta.json", "w") as f:
         json.dump({
             "base_model": BASE_MODEL,
+            "seed": args.seed,
             "lora_config": lora_config.to_dict() if hasattr(lora_config, "to_dict") else str(lora_config),
             "train_examples": len(ds["train"]),
             "val_examples": len(ds["validation"]),
-        }, f, indent=2)
+        }, f, indent=2, default=list)  # LoraConfig holds sets
 
     print("Done.")
 

@@ -13,7 +13,7 @@ if root_dir not in sys.path:
     sys.path.append(root_dir)
 
 from config.settings import settings
-from backend_api.routes import chat, inventory, audit
+from backend_api.routes import chat, inventory, audit, traces
 
 logger = logging.getLogger("api")
 
@@ -77,6 +77,9 @@ app.include_router(inventory.router, prefix="/backend-api")
 
 app.include_router(audit.router)
 app.include_router(audit.router, prefix="/backend-api")
+
+app.include_router(traces.router)
+app.include_router(traces.router, prefix="/backend-api")
 
 @app.get("/health")
 def health_check():

@@ -1,5 +1,6 @@
 import json
 import time
+import uuid
 from typing import AsyncGenerator
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -11,6 +12,7 @@ from agents.checklist import generate_checklist
 from agents.memory_agent import manage_inventory
 from agents.deadlines import track_deadlines
 from config.settings import settings
+from config.telemetry import get_trace, start_trace, traced_node
 from config.cost_guard import start_request, budget_exhausted, spent_usd, MAX_USD_PER_REQUEST
 
 # 1. Intent Detection
@@ -60,7 +62,7 @@ async def synthesize_answer(state: LexAgentState) -> LexAgentState:
 # Build Graph
 builder = StateGraph(LexAgentState)
 
-builder.add_node("detect_intent", detect_intent)
+builder.add_node("detect_intent", traced_node("detect_intent")(detect_intent))
 if settings.use_local_classifier:
     # Lazy import: only pulls in torch/peft/bitsandbytes (finetune/requirements.txt)
     # when actually enabled, so the default Gemini-only setup stays lightweight.
@@ -69,11 +71,11 @@ if settings.use_local_classifier:
 else:
     _classifier_node = classify_ai_system
 
-builder.add_node("classifier_node", _classifier_node)
-builder.add_node("retriever_node", retrieve_articles)
-builder.add_node("checklist_node", generate_checklist)
-builder.add_node("memory_node", manage_inventory)
-builder.add_node("deadlines_node", track_deadlines)
+builder.add_node("classifier_node", traced_node("classifier")(_classifier_node))
+builder.add_node("retriever_node", traced_node("retriever")(retrieve_articles))
+builder.add_node("checklist_node", traced_node("checklist")(generate_checklist))
+builder.add_node("memory_node", traced_node("memory")(manage_inventory))
+builder.add_node("deadlines_node", traced_node("deadlines")(track_deadlines))
 builder.add_node("synthesize_answer", synthesize_answer)
 
 builder.set_entry_point("detect_intent")
@@ -91,6 +93,8 @@ async def run_agent(user_message: str, company_id: str, session_id: str) -> Asyn
     
     # IMMEDIATE yield to keep connection alive on Vercel
     yield f"data: {json.dumps({'type': 'status', 'message': 'researching', 'session_id': session_id})}\n\n"
+    request_id = uuid.uuid4().hex[:12]
+    start_trace(request_id)  # spans from here on belong to this request (config/telemetry.py)
     start_request()  # fresh cost budget for this request (see config/cost_guard.py)
 
     thread_config = {"configurable": {"thread_id": session_id}}
@@ -144,7 +148,7 @@ async def run_agent(user_message: str, company_id: str, session_id: str) -> Asyn
     if budget_exhausted():
         msg = f"Stopped: this request hit its cost cap (${spent_usd():.4f} of ${MAX_USD_PER_REQUEST:.4f}). Try a narrower question."
         yield f"data: {json.dumps({'type': 'answer', 'text': msg})}\n\n"
-        yield f"data: {json.dumps({'type': 'done', 'session_id': session_id, 'trace': final_state.get('agent_trace', [])})}\n\n"
+        yield f"data: {json.dumps({'type': 'done', 'session_id': session_id, 'request_id': request_id, 'usage': get_trace(request_id)['summary'], 'trace': final_state.get('agent_trace', [])})}\n\n"
         return
 
     llm = settings.get_llm(streaming=True)
@@ -161,4 +165,4 @@ async def run_agent(user_message: str, company_id: str, session_id: str) -> Asyn
     
     # Final Done Output with internal structures to save to db
     latency_fake = sum([t["latency_ms"] for t in final_state.get("agent_trace", [])])
-    yield f"data: {json.dumps({'type': 'done', 'session_id': session_id, 'latency_ms': latency_fake, 'trace': final_state.get('agent_trace', [])})}\n\n"
+    yield f"data: {json.dumps({'type': 'done', 'session_id': session_id, 'request_id': request_id, 'usage': get_trace(request_id)['summary'], 'latency_ms': latency_fake, 'trace': final_state.get('agent_trace', [])})}\n\n"

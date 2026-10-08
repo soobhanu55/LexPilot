@@ -3,6 +3,7 @@ from qdrant_client import AsyncQdrantClient, QdrantClient
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 
 from config.cost_guard import CostCap
+from config.telemetry import TraceCallback
 
 
 class Settings(BaseSettings):
@@ -50,7 +51,7 @@ class Settings(BaseSettings):
             temperature=0.0,
             api_key=self.google_api_key,
             max_retries=2,  # transient API errors are retried; each retry still counts against the cost cap
-            callbacks=[CostCap()],
+            callbacks=[CostCap(), TraceCallback(self.llm_model)],
         )
 
     def get_embeddings(self) -> GoogleGenerativeAIEmbeddings:

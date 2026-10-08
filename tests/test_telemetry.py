@@ -5,7 +5,9 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
-from langchain_core.messages import AIMessage
+from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import AIMessage, AIMessageChunk
+from langchain_core.outputs import ChatGenerationChunk
 
 from agents import supervisor
 from backend_api import index
@@ -81,3 +83,29 @@ def test_traces_endpoint(fake_llm):
     body = client.get("/traces/api-1").json()
     assert body["request_id"] == "api-1" and body["summary"]["agents"] == ["agent.demo"]
     assert client.get("/backend-api/traces/api-1").status_code == 200  # also served under the Vercel prefix
+
+
+class StreamingModel(BaseChatModel):
+    """Streams like Gemini: text chunks first, token usage on the last chunk."""
+
+    @property
+    def _llm_type(self):
+        return "streaming-fake"
+
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        raise NotImplementedError
+
+    def _stream(self, messages, stop=None, run_manager=None, **kwargs):
+        for text in ("Answer ", "text."):
+            yield ChatGenerationChunk(message=AIMessageChunk(content=text))
+        usage = {"input_tokens": 700, "output_tokens": 40, "total_tokens": 740}
+        yield ChatGenerationChunk(message=AIMessageChunk(content="", usage_metadata=usage))
+
+
+async def test_streamed_answers_are_counted_from_the_last_chunk():
+    telemetry.start_trace("stream-1")
+    llm = StreamingModel(callbacks=[telemetry.TraceCallback("gemini-1.5-flash")])
+    text = "".join([c.content async for c in llm.astream("hi")])
+    s = telemetry.get_trace("stream-1")["summary"]
+    assert text == "Answer text." and s["llm_calls"] == 1 and (s["input_tokens"], s["output_tokens"]) == (700, 40)
+    assert s["cost_usd"] == pytest.approx(cost_guard.cost_of(700, 40), abs=1e-6)

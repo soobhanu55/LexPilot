@@ -2,6 +2,8 @@
 
 A multi-agent assistant that classifies AI systems against EU AI Act risk tiers and tracks compliance obligations, grounded in a knowledge graph of the actual regulation text.
 
+**Why now.** The EU AI Act is phased in and its dates have moved: prohibited practices apply since 2 February 2025, general-purpose model duties since 2 August 2025, and under the 2026 digital-omnibus agreement the high-risk obligations were postponed to 2 December 2027 (Annex III) and 2 August 2028 (Annex I products) ([summary](https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/); sources disagreed on whether the change was already published in the Official Journal, so check it before relying on a date). A company needs to know which of its AI systems fall under which date. LexPilot classifies a system, lists its obligations with article citations, and tracks these deadlines.
+
 ![Chat UI](docs/screenshots/chat.png)
 
 ## How it works
